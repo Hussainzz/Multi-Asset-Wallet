@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  apiKey    String?  @unique
+  wallets   Wallet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([apiKey], map: "idx_user_api_key")
+  @@map("users")
+}
+
+model Wallet {
+  id           Int           @id @default(autoincrement())
+  walletName   String
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  balances     Balance[]
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+
+  @@index([userId])
+  @@map("wallets")
+}
+
+model Asset {
+  id           Int           @id @default(autoincrement())
+  name         String
+  symbol       String
+  type         AssetType
+  balances     Balance[]
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+
+  @@map("assets")
+}
+
+model Balance {
+  id       Int     @id @default(autoincrement())
+  walletId Int
+  wallet   Wallet  @relation(fields: [walletId], references: [id])
+  assetId  Int
+  asset    Asset   @relation(fields: [assetId], references: [id])
+  amount   Decimal
+  address  String  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([walletId, assetId])
+  @@index([walletId])
+  @@index([assetId])
+  @@map("balances")
+}
+
+model Transaction {
+  id         Int             @id @default(autoincrement())
+  senderWalletId   Int
+  wallet     Wallet          @relation(fields: [senderWalletId], references: [id])
+  assetId    Int
+  asset      Asset           @relation(fields: [assetId], references: [id])
+  amount     Decimal
+  type       TransactionType
+  receiverWalletId Int?
+  status     TransactionStatus
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @default(now()) @updatedAt
+
+  @@index([senderWalletId, receiverWalletId])
+  @@index([assetId])
+  @@map("transactions")
+}
+
+enum AssetType {
+  CRYPTO
+  FIAT
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWL
+  TRANSFER
+}
+
+enum TransactionStatus {
+  SUCCESS
+  ERROR
+}
