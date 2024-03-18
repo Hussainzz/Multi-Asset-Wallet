@@ -24,12 +24,23 @@ import validateWithdrawBody from "@/middleware/validateWithdrawBody";
  *     security:
  *       - wallet-x-key: []
  *     responses:
- *       '201':
- *         description: Successful response
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/TransferResponse'
+ *       '400':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/TransferBadRequestResponse'
  *       '500':
  *         description: Error
  *       '401':
- *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/TransferUnAuthorizedResponse'
  */
 router.post("/transfer", validateAPIKey, validateTransferBody, transferFunds);
 
@@ -47,12 +58,23 @@ router.post("/transfer", validateAPIKey, validateTransferBody, transferFunds);
  *     security:
  *       - wallet-x-key: []
  *     responses:
- *       '201':
- *         description: Successful response
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/WithdrawResponse'
+ *       '400':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/TransferBadRequestResponse'
  *       '500':
  *         description: Error
  *       '401':
- *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/TransferUnAuthorizedResponse'
  */
 router.post("/withdraw", validateAPIKey, validateWithdrawBody, withdrawFunds);
 
@@ -76,9 +98,12 @@ router.post("/withdraw", validateAPIKey, validateWithdrawBody, withdrawFunds);
  *       - wallet-x-key: []
  *     responses:
  *       '200':
- *         description: Successful response
+ *         description: List of wallet transactions
  *       '401':
- *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/TransferUnAuthorizedResponse'
  */
 router.get("/:walletId", validateAPIKey, getWalletTransactions);
 

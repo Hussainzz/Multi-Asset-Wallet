@@ -24,7 +24,10 @@ import validateAPIKey from "@/middleware/validateAPIKey";
  *       - wallet-x-key: []
  *     responses:
  *       '201':
- *         description: Successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schema/WalletCreationResponse'
  *       '500':
  *         description: Error
  *       '401':

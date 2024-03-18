@@ -18,4 +18,13 @@
  *         symbol:
  *           type: string
  *           default: "Primary Wallet"
+ *     WalletCreationResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           default: "success"
+ *         wallet:
+ *           type: number
+ *           default: 1
  */

@@ -73,7 +73,7 @@ export const transferFunds = catchAsync(
     }
     res.json({
       status: "success",
-      message: "Transaction Transfer Requested!..",
+      message: "Transaction Transfer Requested!",
     });
   }
 );
